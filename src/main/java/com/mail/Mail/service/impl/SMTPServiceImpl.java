@@ -1,5 +1,6 @@
 package com.mail.Mail.service.impl;
 
+import com.mail.Mail.entity.EmailEntity;
 import com.mail.Mail.service.SMTPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,14 +24,14 @@ public class SMTPServiceImpl implements SMTPService {
         javaMailSender.send(message);
     }
 
-    public void sendMessageWithAttachment(String to, String subject, String text) {
+    public void sendMessageWithAttachment(EmailEntity emailEntity) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(text,true);
+            helper.setTo(emailEntity.getEmail());
+            helper.setSubject(emailEntity.getSubject());
+            helper.setText(emailEntity.getContent(),true);
         }catch(Exception e){
             System.out.println(e);
         }
