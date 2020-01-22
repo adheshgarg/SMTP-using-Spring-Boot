@@ -31,7 +31,7 @@ public class SMTPServiceImpl implements SMTPService {
 
             helper.setTo(emailEntity.getEmail());
             helper.setSubject(emailEntity.getSubject());
-            helper.setText(emailEntity.getContent(),true);
+            helper.setText("",true);
         }catch(Exception e){
             System.out.println(e);
         }
@@ -41,5 +41,6 @@ public class SMTPServiceImpl implements SMTPService {
 //        helper.addAttachment("Invoice", file);
 
         javaMailSender.send(message);
+
     }
 }
