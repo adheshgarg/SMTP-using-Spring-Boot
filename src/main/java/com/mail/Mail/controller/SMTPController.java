@@ -1,8 +1,10 @@
 package com.mail.Mail.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mail.Mail.entity.EmailEntity;
 import com.mail.Mail.service.impl.SMTPServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,4 +27,17 @@ public class SMTPController {
         smtpService.sendMessageWithAttachment(emailEntity);
         return true;
     }
+
+    @KafkaListener(topics = "email", groupId = "group_id1")
+    public void listen(String message) {
+        try {
+            System.out.println(message);
+            ObjectMapper objectMapper = new ObjectMapper();
+            EmailEntity emailEntity = objectMapper.readValue(message, EmailEntity.class);
+            smtpService.sendMessageWithAttachment(emailEntity);
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
 }
