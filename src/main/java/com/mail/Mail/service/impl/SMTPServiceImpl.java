@@ -16,6 +16,9 @@ public class SMTPServiceImpl implements SMTPService {
     @Autowired
     public JavaMailSender javaMailSender;
 
+    @Autowired
+    private GenerateHTML generateHTML;
+
     public void sendSimpleMessage(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -31,7 +34,8 @@ public class SMTPServiceImpl implements SMTPService {
 
             helper.setTo(emailEntity.getEmail());
             helper.setSubject(emailEntity.getSubject());
-            helper.setText("",true);
+            helper.setText(generateHTML.generateMailHtml(),true);
+
         }catch(Exception e){
             System.out.println(e);
         }
@@ -39,8 +43,11 @@ public class SMTPServiceImpl implements SMTPService {
 //        FileSystemResource file
 //                = new FileSystemResource(new File(pathToAttachment));
 //        helper.addAttachment("Invoice", file);
-
-        javaMailSender.send(message);
+        try {
+            javaMailSender.send(message);
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
     }
 }

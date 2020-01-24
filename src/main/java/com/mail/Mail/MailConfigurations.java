@@ -5,8 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +35,25 @@ public class MailConfigurations {
         props.put("mail.debug", "true");
 
         return mailSender;
+    }
+    @Bean
+    public ITemplateResolver templateResolver()
+    {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+
+        return templateResolver;
+    }
+
+    @Bean
+    public TemplateEngine templateEngine()
+    {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(this.templateResolver());
+
+        return templateEngine;
     }
 
 }
